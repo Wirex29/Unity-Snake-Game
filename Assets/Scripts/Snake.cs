@@ -5,15 +5,19 @@ using UnityEngine;
 public class Snake : MonoBehaviour
 {
     private Vector2Int snakePosition;
-    private Vector2Int direction = Vector2Int.right;
-    private float moveTimer = 1f;
+    private Vector2Int direction;
+    private float moveTimer;
     private float currentTime;
 
 
     private void Awake()
     {
         snakePosition.Set(5, 5);
+        moveTimer = 1f;
+        direction = Vector2Int.right;
         currentTime = moveTimer;
+        Time.fixedDeltaTime = 1;
+
     }
 
     private void Update()
@@ -21,26 +25,37 @@ public class Snake : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W))
         {
             direction = Vector2Int.up;
-        } else if (Input.GetKeyDown(KeyCode.S))
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
         {
             direction = Vector2Int.down;
-        } else if (Input.GetKeyDown(KeyCode.A))
+        }
+        else if (Input.GetKeyDown(KeyCode.A))
         {
             direction = Vector2Int.left;
-        } else if (Input.GetKeyDown(KeyCode.D))
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
         {
             direction = Vector2Int.right;
         }
 
+        //currentTime += Time.deltaTime;
+        //if (currentTime >= moveTimer)
+        //{
+        //    snakePosition += direction;
+        //    currentTime -= moveTimer;
+        //}
+
+        //Debug.Log(Time.deltaTime);
+
+        //snakePosition += direction;
 
 
-        transform.position = new Vector3(snakePosition.x + direction.x, snakePosition.y + direction.y, 0);
     }
 
     private void FixedUpdate()
     {
-
-        
-
+        snakePosition += direction;
+        transform.position = new Vector3(snakePosition.x, snakePosition.y);
     }
 }
