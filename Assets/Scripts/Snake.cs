@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class Snake : MonoBehaviour
 {
@@ -10,13 +11,21 @@ public class Snake : MonoBehaviour
     private int speed = 4;
     private List<Transform> bodyList;
     public Transform bodyPart;
-    public int score = 0;
+
+    public static int score;
+    private static int maxScore;
+
+
+    [SerializeField] private TextMeshProUGUI txtScore;
+
 
     private void Awake()
     {
         snakePosition.Set(5, 5);
         direction = Vector2Int.up;
         Time.fixedDeltaTime = 0.2f;
+        score = 0;
+        maxScore = GameController.getPref("Score");
 
         bodyList = new List<Transform>();
         bodyList.Add(this.transform);
@@ -85,8 +94,11 @@ public class Snake : MonoBehaviour
         {
             growBody();
             score += 1;
+            txtScore.text = ("Score: " + score.ToString());
         } else if (collision.CompareTag("Wall") || collision.CompareTag("Snake Body"))
         {
+            if (score > maxScore) maxScore = score;
+            GameController.setPref("Score", maxScore);
             SceneManager.LoadScene(0);
         }
     }
@@ -97,4 +109,15 @@ public class Snake : MonoBehaviour
         if (angle < 0) angle += 360;
         return angle;
     }
+
+    public static int getMaxScore()
+    {
+        return maxScore;
+    }
+
+    public static void setScore(int score)
+    {
+        maxScore = score;
+    }
+
 }
